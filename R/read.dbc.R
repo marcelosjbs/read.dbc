@@ -82,7 +82,7 @@ read.dbc <- function(file, type='dbcfile', ...) {
                 fnames = as.character(unzip(file, list = TRUE)$Name)
                 lst = vector("list", length(fnames))
                 for (i in seq_along(fnames))
-                        input = internal_dbc2dbf(unz(fileName, fnames[1]),'zipfile')
+                        input = internal_dbc2dbf(unz(fileName, fnames[i]),'zipfile')
 
         }
 
