@@ -53,8 +53,9 @@ static int outf(void *how, unsigned char *buf, unsigned len)
 
 /* Close open files before exit */
 void cleanup(FILE* input, FILE* output) {
-    if( input  ) fclose(input);
-    if( output ) fclose(output);
+   #
+  /* if( input  ) fclose(input);
+    if( output ) fclose(output);*/
 }
 
 /*
