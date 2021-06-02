@@ -75,6 +75,8 @@ void dbc2dbf(char** input_file, char** output_file, char** type) {
         if(input == NULL) {
             error("Error reading input file %s: %s", input_file[0], strerror(errno));
         }
+    } else {
+        input = input_file;
     }
 
 
