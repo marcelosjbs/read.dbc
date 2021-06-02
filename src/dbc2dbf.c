@@ -51,7 +51,6 @@ static int outf(void *how, unsigned char *buf, unsigned len)
     return fwrite(buf, 1, len, (FILE *)how) != len;
 }
 
-
 /* Close open files before exit */
 void cleanup(FILE* input, FILE* output) {
     if( input  ) fclose(input);
@@ -64,17 +63,20 @@ void cleanup(FILE* input, FILE* output) {
 
     Please provide fully qualified names, including file extension.
  */
-void dbc2dbf(char** input_file, char** output_file) {
+void dbc2dbf(char** input_file, char** output_file, char** type) {
     FILE          *input = 0, *output = 0;
     int           ret = 0;
     unsigned char rawHeader[2];
     uint16_t      header = 0;
 
-    /* Open input file */
-    input  = fopen(input_file[0], "rb");
-    if(input == NULL) {
-        error("Error reading input file %s: %s", input_file[0], strerror(errno));
+    if ( type=="dbcfile") {
+        /* Open input file */
+        input  = fopen(input_file[0], "rb");
+        if(input == NULL) {
+            error("Error reading input file %s: %s", input_file[0], strerror(errno));
+        }
     }
+
 
     /* Open output file */
     output = fopen(output_file[0], "wb");

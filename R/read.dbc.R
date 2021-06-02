@@ -57,19 +57,34 @@
 #' head(dopr)
 #' str(dopr)
 #' }
-read.dbc <- function(file, ...) {
-        # Output file name
-        out <- tempfile(fileext = ".dbf")
+read.dbc <- function(file, type='dbcfile', ...) {
+        
+        _dbc2dbf <- function(file, type) {
+                # Output file name
+                out <- tempfile(fileext = ".dbf")
+                
+                if( dbc2dbf(file, out, type) ) {
+                        # Use read.dbf from foreing package to read the uncompressed file
+                        df <- foreign::read.dbf(out, ...)
 
-        # Decompress the dbc file using the blast library wrapper.
-        if( dbc2dbf(file, out) ) {
-                # Use read.dbf from foreing package to read the uncompressed file
-                df <- foreign::read.dbf(out, ...)
+                        # Delete temp file
+                        file.remove(out)
 
-                # Delete temp file
-                file.remove(out)
+                        # Return data frame
+                        return(df)
+                }
 
-                # Return data frame
-                return(df)
         }
+
+        if ( type == 'dbcfile') {
+                _dbc2dbf(file, 'dbcfile');
+        } else if ( type == 'zipfile' ) {
+                fnames = as.character(unzip(file, list = TRUE)$Name)
+                lst = vector("list", length(fnames))
+                for (i in seq_along(fnames))
+                        input = _dbc2dbf(unz(fileName, fnames[1]),'zipfile')
+
+        }
+
+
 }

@@ -17,7 +17,7 @@
 #' Decompress a DBC (compressed DBF) file
 #'
 #' This function allows you decompress a DBC file into its DBF counterpart. Please note that this is the file format used by the Brazilian Ministry of Health (DATASUS), and it is not related to the FoxPro or CANdb DBC file formats.
-#' @param input.file The name of the DBC file (including extension)
+#' @param input The name of the DBC file (including extension) or ZipFile Stream
 #' @param output.file The output file name (including extension)
 #' @return Return TRUE if succeded, FALSE otherwise.
 #' @details
@@ -51,9 +51,15 @@
 #'
 #' \code{blast-dbf}, DBC to DBF command-line decompression tool: \url{https://github.com/eaglebh/blast-dbf}
 #'
-dbc2dbf <- function(input.file, output.file) {
-        if( !file.exists(input.file) )
-                stop("Input file does not exist.")
-        out <- .C("dbc2dbf", input = as.character(path.expand(input.file)), output = as.character(path.expand(output.file)))
+dbc2dbf <- function(input, output.file, type) {
+
+        if (type=='dbcfile' ) {
+                if( !file.exists(input) )
+                        stop("Input file does not exist.")
+                out <- .C("dbc2dbf", input = as.character(path.expand(input.file)), output = as.character(path.expand(output.file)), type='dbcfile')
+        } else {
+                out <- .C("dbc2dbf", input, output = as.character(path.expand(output.file)), type='zipfile')
+        }
+        
         file.exists(output.file)
 }
